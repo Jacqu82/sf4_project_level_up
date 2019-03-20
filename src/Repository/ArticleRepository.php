@@ -31,6 +31,17 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findOneBySlugWithJoinComments(string $slug)
+    {
+        return $this->addIsPublishedQueryBuilder()
+            ->leftJoin('a.comments', 'c')
+            ->addSelect('c')
+            ->andWhere('a.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getSingleResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Article
     {
