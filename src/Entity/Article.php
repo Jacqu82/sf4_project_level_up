@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -59,9 +61,10 @@ class Article
     private $imageFilename;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
-    private $comments;
+    private $comments;//EXTRA_LAZY good for count queries
 
     public function __construct()
     {
@@ -175,6 +178,16 @@ class Article
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getNonDeletedComments(): Collection
+    {
+        $criteria = ArticleRepository::createNonDeleteCriteria();
+
+        return $this->comments->matching($criteria);
     }
 
     public function addComment(Comment $comment): self
