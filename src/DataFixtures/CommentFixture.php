@@ -9,7 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class CommentFixture extends BaseFixture implements DependentFixtureInterface
 {
-    public function loadData(ObjectManager $manager)
+    protected function loadData(ObjectManager $manager)
     {
         $this->createMany(Comment::class, 100, function (Comment $comment) {
             $comment->setContent(
