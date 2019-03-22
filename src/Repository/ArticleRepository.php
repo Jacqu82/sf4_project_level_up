@@ -35,7 +35,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function findOneBySlugWithJoinComments(string $slug)
     {
         return $this->addIsPublishedQueryBuilder()
-            ->leftJoin('a.comments', 'c')
+            ->innerJoin('a.comments', 'c')
             ->addSelect('c')
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)

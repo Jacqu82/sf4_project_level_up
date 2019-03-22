@@ -25,9 +25,9 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}", name="article_show")
      */
-    public function show(Article $article, SlackClient $slack, ArticleRepository $repository)
+    public function show($slug, SlackClient $slack, ArticleRepository $repository)
     {
-        //$article = $repository->findOneBySlugWithJoinComments($slug);
+        $article = $repository->findOneBySlugWithJoinComments($slug);
 
         if ($article->getSlug() === 'khaaaaaan') {
             $slack->sendMessage('Ah, Kirk, my old friend...');
